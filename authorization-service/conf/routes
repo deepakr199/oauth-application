@@ -1,0 +1,9 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+GET     /                                           controllers.Authorization.index()
+
+# Authorization Actions
+POST    /internal/v1/oauth/token                    controllers.Authorization.oauthToken()
+GET     /internal/v1/authorized/:access_token       controllers.Authorization.authorized(access_token: String)
