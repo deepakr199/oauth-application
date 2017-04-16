@@ -1,0 +1,9 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+GET   /                           controllers.UserResource.index()
+
+# User Actions
+GET     /internal/v1/user         controllers.UserResource.getUsers()
+POST    /internal/v1/user         controllers.UserResource.createUser()
