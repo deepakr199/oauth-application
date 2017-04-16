@@ -31,7 +31,7 @@ public class UserResource extends Controller {
   }
 
   public Result index() {
-    return ok("Client Service up and running");
+    return ok("User Resource Service up and running");
   }
 
   @Security.Authenticated(Secured.class)

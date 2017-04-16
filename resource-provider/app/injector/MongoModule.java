@@ -2,20 +2,30 @@ package injector;
 
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
 import com.mongodb.MongoClient;
 import com.mongodb.ReadPreference;
 import com.mongodb.ServerAddress;
 import com.mongodb.WriteConcern;
+import models.User;
+import models.request.UserRequest;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import play.Configuration;
 import play.Environment;
+import services.UserResourceService;
+
+import java.util.Base64;
 
 /**
  *  Module to help configure and connect to mongo
  */
 public class MongoModule extends AbstractModule {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(MongoModule.class);
 
   private final String mongoHost;
   private final String mongoPort;
@@ -42,6 +52,7 @@ public class MongoModule extends AbstractModule {
     MorphiaLoggerFactory.reset();
     init();
     bind();
+    supplyInitialData();
   }
 
   private void init() {
@@ -68,5 +79,26 @@ public class MongoModule extends AbstractModule {
     datastore.ensureCaps();
     datastore.setDefaultWriteConcern(WriteConcern.ACKNOWLEDGED);
     return datastore;
+  }
+
+  private void supplyInitialData() {
+    bind(MongoDataInitializer.class).asEagerSingleton();
+  }
+
+  public static class MongoDataInitializer {
+
+    @Inject
+    public MongoDataInitializer(UserResourceService userResourceService) {
+      if (userResourceService.getUsers().getCount() == 0) {
+        LOGGER.info("Loading Data into mongo...");
+        UserRequest userRequest = UserRequest.builder()
+            .firstName("Deepak").lastName("Ramakrishnaiah").phone("9999")
+            .email("valid@email.com").password(Base64.getEncoder().encodeToString("password".getBytes()))
+            .role(User.UserRole.ADMIN).status(User.UserStatus.ACTIVE)
+            .build();
+        userResourceService.saveUser(userRequest);
+      }
+    }
+
   }
 }
