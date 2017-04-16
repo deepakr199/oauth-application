@@ -1,0 +1,13 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+GET     /                              controllers.Client.index()
+
+# Authorization Actions
+POST    /v1/login                      controllers.Client.login()
+POST    /v1/accessToken                controllers.Client.getAccessToken()
+
+# User Actions
+GET     /v1/user                       controllers.Client.getUsers()
+POST    /v1/user                       controllers.Client.createUser()
