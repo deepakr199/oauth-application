@@ -1,49 +1,29 @@
-This is your new Play application
-=================================
+# client-service
+Service helps to handle user request on validating user credentials, creating access token, fetching users and create user
 
-This file will be packaged with your application when using `activator dist`.
+1) To Validate the credentials and get Refresh and Access token
+```
+POST    localhost:9998/v1/login  
+Payload->{"email":"valid@email.com","password":"password"}
+```
+2) To get Access token from Refresh Token
 
-There are several demonstration files available in this template.
+```
+POST    localhost:9998/v1/accessToken                
+Header -> refresh-token:{value}
+```
 
-Controllers
-===========
+3) To get Users 
 
-- HomeController.java:
+```
+GET     localhost:9998/v1/user                
+Header -> access-token:{value}
+```
 
-  Shows how to handle simple HTTP requests.
+4) To save User
 
-- AsyncController.java:
-
-  Shows how to do asynchronous programming when handling a request.
-
-- CountController.java:
-
-  Shows how to inject a component into a controller and use the component when
-  handling requests.
-
-Components
-==========
-
-- Module.java:
-
-  Shows how to use Guice to bind all the components needed by your application.
-
-- Counter.java:
-
-  An example of a component that contains state, in this case a simple counter.
-
-- ApplicationTimer.java:
-
-  An example of a component that starts when the application starts and stops
-  when the application stops.
-
-Filters
-=======
-
-- Filters.java:
-
-  Creates the list of HTTP filters used by your application.
-
-- ExampleFilter.java
-
-  A simple filter that adds a header to every response.
+```
+POST    localhost:9998/v1/user          
+Header -> access-token:{value} 
+Payload->{"phone":"12345","first_name": "Deepak","last_name": "R","email": "valid@email.com","password": "somepass","role":"ADMIN","status":"ACTIVE"}
+```
